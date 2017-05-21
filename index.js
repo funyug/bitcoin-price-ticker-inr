@@ -3,6 +3,10 @@ var http = require('http').Server(app);
 var https = require('https');
 var io = require('socket.io')(http);
 
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
+
 var socket2 = io.of('/price');
 socket2.on('connection', function(socket){
     console.log('a user connected');
@@ -99,3 +103,8 @@ var priceUpdate = function() {
 };
 
 setInterval(priceUpdate,10000);
+
+
+http.listen(3001, function(){
+    console.log('listening on *:3000');
+});
