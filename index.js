@@ -3,11 +3,7 @@ var http = require('http').Server(app);
 var https = require('https');
 var io = require('socket.io')(http);
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-});
-
-var socket2 = io.of('/test');
+var socket2 = io.of('/price');
 socket2.on('connection', function(socket){
     console.log('a user connected');
     socket.on('disconnect', function(){
@@ -75,8 +71,8 @@ var getCoinsecurePrice = function() {
         res.setEncoding('utf8');
         res.on('data', function (data) {
             data = JSON.parse(data);
-            coinsecureBuyPrice = data.message.ask;
-            coinsecureSellPrice = data.message.bid;
+            coinsecureBuyPrice = data.message.ask/100;
+            coinsecureSellPrice = data.message.bid/100;
         });
     });
 
@@ -102,9 +98,4 @@ var priceUpdate = function() {
     socket2.emit("price",data);
 };
 
-setInterval(priceUpdate,20000);
-
-
-http.listen(3000, function(){
-    console.log('listening on *:3000');
-});
+setInterval(priceUpdate,10000);
