@@ -74,7 +74,12 @@ var getCoinsecurePrice = function() {
     var req = https.get(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function (data) {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            }
+            catch(e) {
+                return true;
+            }
             coinsecureBuyPrice = data.message.ask/100;
             coinsecureSellPrice = data.message.bid/100;
         });
