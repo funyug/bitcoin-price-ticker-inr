@@ -21,6 +21,8 @@ var unocoinBuyPrice = 0;
 var unocoinSellPrice = 0;
 var coinsecureBuyPrice = 0;
 var coinsecureSellPrice = 0;
+var pocketBitsBuyPrice = 0;
+var pocketBitsSellPrice = 0;
 
 var getZebpayPrice = function() {
     var options = {
@@ -90,10 +92,32 @@ var getCoinsecurePrice = function() {
     });
 };
 
+var getPocketBitsPrice = function() {
+    var options = {
+        host: 'www.pocketbits.in',
+        path: '/Index/getBTCRate',
+        port: 443
+    };
+
+    var req = https.get(options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (data) {
+            data = JSON.parse(data);
+            pocketBitsBuyPrice = data.BTC_BuyingRate;
+            pocketBitsSellPrice = data.BTC_SellingRate;
+        });
+    });
+
+    req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+    });
+};
+
 var priceUpdate = function() {
     getZebpayPrice();
     getUnocoinPrice();
     getCoinsecurePrice();
+    getPocketBitsPrice();
 
     var data = {
         unocoinBuyPrice : unocoinBuyPrice,
@@ -101,7 +125,9 @@ var priceUpdate = function() {
         zebpayBuyPrice : zebpayBuyPrice,
         zebpaySellPrice : zebpaySellPrice,
         coinsecureBuyPrice : coinsecureBuyPrice,
-        coinsecureSellPrice : coinsecureSellPrice
+        coinsecureSellPrice : coinsecureSellPrice,
+        pocketBitsBuyPrice : pocketBitsBuyPrice,
+        pocketBitsSellPrice : pocketBitsSellPrice
     };
 
     socket2.emit("price",data);
@@ -111,5 +137,5 @@ setInterval(priceUpdate,10000);
 
 
 http.listen(3001, function(){
-    console.log('listening on *:3000');
+    console.log('listening on *:3001');
 });
