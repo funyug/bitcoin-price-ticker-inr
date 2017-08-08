@@ -34,9 +34,14 @@ var getZebpayPrice = function() {
     var req = https.get(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function (data) {
-            data = JSON.parse(data);
-            zebpayBuyPrice = data.buy;
-            zebpaySellPrice = data.sell;
+            try {
+                data = JSON.parse(data);
+                zebpayBuyPrice = data.buy;
+                zebpaySellPrice = data.sell;
+            }
+            catch(e) {
+                return true;
+            }
         });
     });
 
@@ -55,9 +60,14 @@ var getUnocoinPrice = function() {
     var req = https.get(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function (data) {
-            data = JSON.parse(data);
-            unocoinBuyPrice = data.buy;
-            unocoinSellPrice = data.sell;
+            try {
+                data = JSON.parse(data);
+                unocoinBuyPrice = data.buy;
+                unocoinSellPrice = data.sell;
+            }
+            catch(e) {
+                return true;
+            }
         });
     });
 
@@ -102,9 +112,14 @@ var getPocketBitsPrice = function() {
     var req = https.get(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function (data) {
-            data = JSON.parse(data);
-            pocketBitsBuyPrice = data.BTC_BuyingRate;
-            pocketBitsSellPrice = data.BTC_SellingRate;
+            try {
+                data = JSON.parse(data);
+                pocketBitsBuyPrice = data.BTC_BuyingRate;
+                pocketBitsSellPrice = data.BTC_SellingRate;
+            }
+            catch(e) {
+                return true;
+            }
         });
     });
 
