@@ -7,14 +7,6 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
-var socket2 = io.of('/price');
-socket2.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
-});
-
 var zebpayBuyPrice = 0;
 var zebpaySellPrice = 0;
 var unocoinBuyPrice = 0;
@@ -23,6 +15,27 @@ var coinsecureBuyPrice = 0;
 var coinsecureSellPrice = 0;
 var pocketBitsBuyPrice = 0;
 var pocketBitsSellPrice = 0;
+
+var data = {
+    unocoinBuyPrice : unocoinBuyPrice,
+    unocoinSellPrice : unocoinSellPrice,
+    zebpayBuyPrice : zebpayBuyPrice,
+    zebpaySellPrice : zebpaySellPrice,
+    coinsecureBuyPrice : coinsecureBuyPrice,
+    coinsecureSellPrice : coinsecureSellPrice,
+    pocketBitsBuyPrice : pocketBitsBuyPrice,
+    pocketBitsSellPrice : pocketBitsSellPrice
+};
+
+var socket2 = io.of('/price');
+socket2.on('connection', function(socket){
+    console.log('a user connected');
+    socket2.emit("price",data);
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+});
+
 
 var getZebpayPrice = function() {
     var options = {
@@ -60,6 +73,7 @@ var getUnocoinPrice = function() {
     var req = https.get(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function (data) {
+			console.log(data);
             try {
                 data = JSON.parse(data);
                 unocoinBuyPrice = data.buy;
@@ -134,7 +148,7 @@ var priceUpdate = function() {
     getCoinsecurePrice();
     getPocketBitsPrice();
 
-    var data = {
+    data = {
         unocoinBuyPrice : unocoinBuyPrice,
         unocoinSellPrice : unocoinSellPrice,
         zebpayBuyPrice : zebpayBuyPrice,
