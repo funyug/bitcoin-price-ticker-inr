@@ -196,7 +196,7 @@ var getCurrencyRate = function() {
 };
 getCurrencyRate();
 priceUpdate();
-setInterval(getCurrencyRate,21600);
+setInterval(getCurrencyRate,21600000);
 setInterval(priceUpdate,10000);
 
 app.get('/bitcoin-price', function(req, res){
